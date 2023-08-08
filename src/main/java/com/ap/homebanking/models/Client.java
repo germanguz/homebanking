@@ -1,7 +1,6 @@
 package com.ap.homebanking.models;
 
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +13,7 @@ import java.util.Set;
 @Entity
 public class Client {
 
+    // atributos
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -22,19 +22,22 @@ public class Client {
     private String lastName;
     private String email;
 
-    @OneToMany(mappedBy="owner", fetch=FetchType.EAGER)
-    Set<Account> accounts = new HashSet<>();
+    @OneToMany(mappedBy="owner", fetch=FetchType.EAGER) //uso owner para no usar tanto client
+    private Set<Account> accounts = new HashSet<>();
 
+
+    // constructores
     public Client() {
     }
 
     public Client(String firstName, String lastName, String email) {
-//        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
+
+    // getters y setters
     public long getId() {
         return id;
     }
@@ -67,6 +70,8 @@ public class Client {
         return accounts;
     }
 
+
+    // toString
     @Override
     public String toString() {
         return "Client{" +
@@ -77,6 +82,8 @@ public class Client {
                 '}';
     }
 
+
+    // métodos
     public void addAccount(Account account) {
         account.setOwner(this);
         accounts.add(account);

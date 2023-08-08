@@ -1,5 +1,6 @@
 package com.ap.homebanking.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Account {
 
+    // atributos
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -23,18 +25,21 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="owner_id")
-    private Client owner;
+    private Client owner;   //uso owner para no usar tanto client
 
+
+    // constructores
     public Account() {
     }
 
     public Account(String number, LocalDate creationDate, double balance) {
-//        this.id = id;
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
     }
 
+
+    // getter y setters
     public long getId() {
         return id;
     }
@@ -63,6 +68,7 @@ public class Account {
         this.balance = balance;
     }
 
+    //@JsonIgnore (al usar DTO ya no hace falta)
     public Client getOwner() {
         return owner;
     }
@@ -71,6 +77,8 @@ public class Account {
         this.owner = owner;
     }
 
+
+    // toString
     @Override
     public String toString() {
         return "Account{" +
@@ -78,6 +86,7 @@ public class Account {
                 ", number='" + number + '\'' +
                 ", creationDate=" + creationDate +
                 ", balance=" + balance +
+                ", owner=" + owner +
                 '}';
     }
 }
