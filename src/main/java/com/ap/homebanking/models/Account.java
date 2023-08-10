@@ -2,14 +2,10 @@ package com.ap.homebanking.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Account {
@@ -24,8 +20,11 @@ public class Account {
     private double balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="owner_id")
-    private Client owner;   //uso owner para no usar tanto client
+    @JoinColumn(name="client_id")
+    private Client client;
+
+    @OneToMany(mappedBy="account", fetch=FetchType.EAGER)
+    private Set<Transaction> transactions = new HashSet<>();
 
 
     // constructores
@@ -68,15 +67,18 @@ public class Account {
         this.balance = balance;
     }
 
-    //@JsonIgnore (al usar DTO ya no hace falta)
-    public Client getOwner() {
-        return owner;
+    //@JsonIgnore //(al usar DTO ya no hace falta)
+    public Client getClient() {
+        return client;
     }
 
-    public void setOwner(Client owner) {
-        this.owner = owner;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
 
     // toString
     @Override
@@ -86,7 +88,14 @@ public class Account {
                 ", number='" + number + '\'' +
                 ", creationDate=" + creationDate +
                 ", balance=" + balance +
-                ", owner=" + owner +
+                ", client=" + client +
+                ", transactions=" + transactions +
                 '}';
+    }
+
+    // métodos
+    public void addTransaction(Transaction transaction) {
+        transaction.setAccount(this);
+        transactions.add(transaction);
     }
 }

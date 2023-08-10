@@ -22,7 +22,7 @@ public class Client {
     private String lastName;
     private String email;
 
-    @OneToMany(mappedBy="owner", fetch=FetchType.EAGER) //uso owner para no usar tanto client
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
 
@@ -85,7 +85,7 @@ public class Client {
 
     // métodos
     public void addAccount(Account account) {
-        account.setOwner(this);
+        account.setClient(this);
         accounts.add(account);
     }
 }

@@ -1,7 +1,6 @@
 package com.ap.homebanking.dtos;
 
 import com.ap.homebanking.models.Client;
-import java.util.HashSet;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 
