@@ -9,9 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Client {
@@ -106,12 +104,5 @@ public class Client {
         loans.add(clientLoan);
     }
 
-    //@JsonIgnore //este lo puse al traer rest/loans en task4
-//    public List<Loan> getLoans() {
-//        return loans.stream().map(sub -> sub.getLoan()).collect(toList());
-//    }
-//    public List<ClientLoan> getLoans() {
-//        return clientLoans.stream().map(sub -> sub.getLoan()).collect(toList());
-//    }
 }
 
