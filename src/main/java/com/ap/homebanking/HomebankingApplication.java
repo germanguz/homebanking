@@ -1,18 +1,14 @@
 package com.ap.homebanking;
 
-import com.ap.homebanking.models.Account;
-import com.ap.homebanking.models.Client;
-import com.ap.homebanking.models.Transaction;
-import com.ap.homebanking.models.TransactionType;
-import com.ap.homebanking.repositories.AccountRepository;
-import com.ap.homebanking.repositories.ClientRepository;
-import com.ap.homebanking.repositories.TransactionRepository;
+import com.ap.homebanking.models.*;
+import com.ap.homebanking.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootApplication
 public class HomebankingApplication {
@@ -23,7 +19,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) {
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) {
 		return (args) -> {
 
 			// creo 2 clientes
@@ -89,7 +85,69 @@ public class HomebankingApplication {
 			transactionRepository.save(transaction7);
 			transactionRepository.save(transaction8);
 
+			//task4
+			// creo 3 tipos de prestamos
+			Loan loan1 = new Loan("Hipotecario", 500000, List.of(12, 24, 36, 48, 60));
+			Loan loan2 = new Loan("Personal", 100000, List.of(6, 12, 24));
+			Loan loan3 = new Loan("Automotriz", 300000, List.of(6, 12, 24, 36));
+
+			// guardo los prestamos en el repositorio de prestamos
+			loanRepository.save(loan1);
+			loanRepository.save(loan2);
+			loanRepository.save(loan3);
+
+			// creo 4 prestamos, 2 para cada cliente
+			ClientLoan clientLoan1 = new ClientLoan(400000, 60);
+			ClientLoan clientLoan2 = new ClientLoan(50000, 12);
+			ClientLoan clientLoan3 = new ClientLoan(100000, 24);
+			ClientLoan clientLoan4 = new ClientLoan(200000, 36);
+
+			// asigno los prestamos a tipo de prestamo y cliente para guardar en clientLoan
+			// tipo de prestamo 1 y cliente 1
+			loan1.addClientLoan(clientLoan1);
+			client1.addClientLoan(clientLoan1);
+			// tipo de prestamo 2 y cliente 1
+			loan2.addClientLoan(clientLoan2);
+			client1.addClientLoan(clientLoan2);
+			// tipo de prestamo 2 y cliente 2
+			loan2.addClientLoan(clientLoan3);
+			client2.addClientLoan(clientLoan3);
+			// tipo de prestamo 3 y cliente 2
+			loan3.addClientLoan(clientLoan4);
+			client2.addClientLoan(clientLoan4);
+
+			// guardo los prestamos en la BD de clientLoan
+			clientLoanRepository.save(clientLoan1);
+			clientLoanRepository.save(clientLoan2);
+			clientLoanRepository.save(clientLoan3);
+			clientLoanRepository.save(clientLoan4);
+
+
+
 		};
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
