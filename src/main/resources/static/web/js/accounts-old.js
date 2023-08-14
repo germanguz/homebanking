@@ -1,6 +1,4 @@
-const { createApp } = Vue;
-
-createApp({
+Vue.createApp({
     data() {
         return {
             clientInfo: {},
@@ -22,8 +20,8 @@ createApp({
                 })
         },
         formatDate(date) {
-            return new Date(date).toLocaleDateString('en-gb');
-        }
+            return new Date(date).toLocaleDateString('en-us');
+        },
     },
     mounted() {
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));

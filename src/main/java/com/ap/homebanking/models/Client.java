@@ -1,5 +1,6 @@
 package com.ap.homebanking.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +25,10 @@ public class Client {
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
+
+    //task4
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
+    private Set<ClientLoan> loans = new HashSet<>();
 
 
     // constructores
@@ -70,6 +75,10 @@ public class Client {
         return accounts;
     }
 
+    @JsonIgnore
+    public Set<ClientLoan> getLoans() {
+        return loans;
+    }
 
     // toString
     @Override
@@ -88,5 +97,12 @@ public class Client {
         account.setClient(this);
         accounts.add(account);
     }
+
+    // task4
+    public void addClientLoan(ClientLoan clientLoan) {
+        clientLoan.setClient(this);
+        loans.add(clientLoan);
+    }
+
 }
 
