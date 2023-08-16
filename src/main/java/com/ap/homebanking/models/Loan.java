@@ -85,10 +85,10 @@ public class Loan {
         clientLoans.add(clientLoan);
     }
 
-    @JsonIgnore //por task4
-    public List<Client> getClients() {
-        return clientLoans.stream().map(sub -> sub.getClient()).collect(toList());
-    }
+    //@JsonIgnore task4 - no es necesario
+//    public List<Client> getClients() {
+//        return clientLoans.stream().map(sub -> sub.getClient()).collect(toList());
+//    }
 
 
 }

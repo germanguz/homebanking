@@ -19,7 +19,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) {
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository) {
 		return (args) -> {
 
 			// creo 2 clientes
@@ -122,6 +122,23 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan3);
 			clientLoanRepository.save(clientLoan4);
 
+			// task5
+			// creo 2 tarjetas para el cliente 1
+			Card card1 = new Card(client1.getFirstName()+" "+client1.getLastName(),CardType.DEBIT, CardColorType.GOLD,"1111-2222-3333-4444", 123, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card2 = new Card(client1.getFirstName()+" "+client1.getLastName(),CardType.CREDIT, CardColorType.TITANIUM,"5555-6666-7777-8888", 456, LocalDate.now(), LocalDate.now().plusYears(5));
+
+			// creo 1 tarjeta para el cliente 2
+			Card card3 = new Card(client2.getFirstName()+" "+client2.getLastName(),CardType.CREDIT, CardColorType.SILVER,"1234-5678-9101-1123", 357, LocalDate.now(), LocalDate.now().plusYears(5));
+
+			// asigno 2 tarjetas al cliente 1, y 1 al cliente 2
+			client1.addCard(card1);
+			client1.addCard(card2);
+			client2.addCard(card3);
+
+			// guardo las tarjetas
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			cardRepository.save(card3);
 
 
 		};

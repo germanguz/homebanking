@@ -30,6 +30,10 @@ public class Client {
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<ClientLoan> loans = new HashSet<>();
 
+    //task5
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Card> cards = new HashSet<>();
+
 
     // constructores
     public Client() {
@@ -80,6 +84,10 @@ public class Client {
         return loans;
     }
 
+    public Set<Card> getCards() {
+        return cards;
+    }
+
     // toString
     @Override
     public String toString() {
@@ -102,6 +110,12 @@ public class Client {
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoan.setClient(this);
         loans.add(clientLoan);
+    }
+
+    // task5
+    public void addCard(Card card) {
+        card.setClient(this);
+        cards.add(card);
     }
 
 }
