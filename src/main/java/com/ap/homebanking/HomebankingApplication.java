@@ -2,16 +2,22 @@ package com.ap.homebanking;
 
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
 public class HomebankingApplication {
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 
@@ -23,8 +29,8 @@ public class HomebankingApplication {
 		return (args) -> {
 
 			// creo 2 clientes
-			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com");
-			Client client2 = new Client("Daniel", "Guira", "daniel@mindhub.com");
+			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("1234"));
+			Client client2 = new Client("Daniel", "Guira", "daniel@mindhub.com", passwordEncoder.encode("1234"));
 
 			// creo 4 cuentas, 2 para cada cliente
 			Account account1 = new Account("VIN001", LocalDate.now(), 5000);
@@ -139,6 +145,10 @@ public class HomebankingApplication {
 			cardRepository.save(card1);
 			cardRepository.save(card2);
 			cardRepository.save(card3);
+
+			// task6
+			Client admin = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"));
+			clientRepository.save(admin);
 
 
 		};

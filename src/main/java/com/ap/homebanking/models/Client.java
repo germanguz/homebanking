@@ -34,15 +34,19 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Card> cards = new HashSet<>();
 
+    //task6
+    private String password;
+
 
     // constructores
     public Client() {
     }
 
-    public Client(String firstName, String lastName, String email) {
+    public Client(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
 
@@ -79,13 +83,21 @@ public class Client {
         return accounts;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
     public Set<ClientLoan> getLoans() {
         return loans;
     }
 
     public Set<Card> getCards() {
         return cards;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     // toString

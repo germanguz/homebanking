@@ -67,6 +67,10 @@ public class Loan {
         this.payments = payments;
     }
 
+    public Set<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
     // toString
     @Override
     public String toString() {
@@ -84,11 +88,5 @@ public class Loan {
         clientLoan.setLoan(this);
         clientLoans.add(clientLoan);
     }
-
-    //@JsonIgnore task4 - no es necesario
-//    public List<Client> getClients() {
-//        return clientLoans.stream().map(sub -> sub.getClient()).collect(toList());
-//    }
-
 
 }
