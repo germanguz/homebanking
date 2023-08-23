@@ -1,30 +1,37 @@
 package com.ap.homebanking.configurations;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @EnableWebSecurity
 @Configuration
-public class WebAuthorization  extends WebSecurityConfigurerAdapter {
+public class WebAuthorization {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    protected SecurityFilterChain filterchain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // a lo que puede acceder cualquier usuario, para registrarse o iniciar sesión
                 .antMatchers("/web/index.html", "/web/js/index.js", "/web/css/style.css", "/web/img/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login", "/api/logout").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
+                // todo a lo que puede acceder solo admin
                 .antMatchers("/h2-console/**").hasAuthority("ADMIN")
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/manager.html", "manager.js").hasAuthority("ADMIN")
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
-                .antMatchers("/**").hasAuthority("CLIENT");
+                // acceso tanto para admin como para cliente
+                .antMatchers("/api/clients/current", "/web/**").hasAnyAuthority("ADMIN", "CLIENT")
+                // solo para admin
+                .antMatchers("/api/clients/**").hasAuthority("ADMIN");
 
         http.formLogin()
                 .usernameParameter("email")
@@ -37,7 +44,6 @@ public class WebAuthorization  extends WebSecurityConfigurerAdapter {
         // turn off checking for CSRF tokens
         http.csrf().disable();
         //disabling frameOptions so h2-console can be accessed
-        //httpSecurity.headers().frameOptions().disable();      este es el que estaba, yo lo modifiqué como se ve abajo
         http.headers().frameOptions().disable();
         // if user is not authenticated, just send an authentication failure response
         http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
@@ -47,6 +53,8 @@ public class WebAuthorization  extends WebSecurityConfigurerAdapter {
         http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
         // if logout is successful, just send a success response
         http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+
+        return http.build();
     }
 
     private void clearAuthenticationAttributes(HttpServletRequest request) {

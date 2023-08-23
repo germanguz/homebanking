@@ -24,7 +24,8 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
         auth.userDetailsService(inputName -> {
             Client client = clientRepository.findByEmail(inputName);
             if(client != null) {
-                if(client.equals("admin@mindhub.com")) {
+                // validación para diferenciar entre administrador y cliente
+                if(client.getEmail().equals("admin@mindhub.com")) {
                     return new User(client.getEmail(), client.getPassword(), AuthorityUtils.createAuthorityList("ADMIN"));
                 } else {
                     return new User(client.getEmail(), client.getPassword(), AuthorityUtils.createAuthorityList("CLIENT"));
@@ -32,11 +33,6 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
             } else {
                 throw new UsernameNotFoundException("Unknown user: " + inputName);
             }
-//            if(client != null) {
-//                return new User(client.getEmail(), client.getPassword(), AuthorityUtils.createAuthorityList("CLIENT"));
-//            } else {
-//                throw new UsernameNotFoundException("Unknown user: " + inputName);
-//            }
         });
     }
 
@@ -46,37 +42,3 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

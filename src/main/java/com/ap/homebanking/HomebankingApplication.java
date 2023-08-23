@@ -147,6 +147,7 @@ public class HomebankingApplication {
 			cardRepository.save(card3);
 
 			// task6
+			// creo un usuario administrador para prueba de roles y accesos
 			Client admin = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"));
 			clientRepository.save(admin);
 
@@ -155,26 +156,4 @@ public class HomebankingApplication {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
