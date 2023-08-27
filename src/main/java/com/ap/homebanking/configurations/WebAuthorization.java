@@ -20,6 +20,7 @@ public class WebAuthorization {
     @Bean
     protected SecurityFilterChain filterchain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                        //.antMatchers(HttpMethod.POST,"/**").permitAll();
                 // a lo que puede acceder cualquier usuario, para registrarse o iniciar sesión
                 .antMatchers("/web/index.html", "/web/js/index.js", "/web/css/style.css", "/web/img/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login", "/api/logout").permitAll()
@@ -28,8 +29,13 @@ public class WebAuthorization {
                 .antMatchers("/h2-console/**").hasAuthority("ADMIN")
                 .antMatchers("/manager.html", "manager.js").hasAuthority("ADMIN")
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
+                .antMatchers("/api/accounts").hasAuthority("ADMIN")
                 // acceso tanto para admin como para cliente
                 .antMatchers("/api/clients/current", "/web/**").hasAnyAuthority("ADMIN", "CLIENT")
+
+                // task7
+                .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAnyAuthority("ADMIN", "CLIENT")
+
                 // solo para admin
                 .antMatchers("/api/clients/**").hasAuthority("ADMIN");
 
