@@ -31,8 +31,10 @@ Vue.createApp({
                         'content-type': 'application/x-www-form-urlencoded'
                     }
                 }
-                //axios.post(`/api/clients/current/cards?cardType=${this.cardType}&cardColor=${this.cardColor}`, config)
-                axios.post('/api/clients/current/cards', `cardType=${this.cardType}&cardColor=${this.cardColor}`, config)
+                axios.post(`/api/clients/current/cards?cardType=${this.cardType}&cardColor=${this.cardColor}`, config)
+                //la linea de abajo la compartió un compañero porque la de arriba fallaba. A mi me falló y la probé
+                //pero seguía fallando. El problema en mi caso era los nombres de los parámetros, que no coincidían
+                //axios.post('/api/clients/current/cards', `cardType=${this.cardType}&cardColor=${this.cardColor}`, config)
                     .then(response => window.location.href = "/web/cards.html")
                     .catch((error) => {
                         this.errorMsg = error.response.data;

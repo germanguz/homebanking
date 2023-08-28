@@ -33,7 +33,7 @@ public class WebAuthorization {
                 .antMatchers("/api/accounts").hasAuthority("ADMIN")
 
                 // acceso tanto para admin como para cliente
-                .antMatchers("/api/clients/current", "/web/**").hasAnyAuthority("ADMIN", "CLIENT")
+                .antMatchers("/api/clients/current", "/web/**", "/api/accounts/**").hasAnyAuthority("ADMIN", "CLIENT")
                 // task7
                 .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAnyAuthority("ADMIN", "CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAnyAuthority("ADMIN", "CLIENT")
