@@ -1,7 +1,9 @@
 package com.ap.homebanking.controllers;
 
 import com.ap.homebanking.dtos.ClientDTO;
+import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
+import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -24,12 +27,13 @@ public class ClientController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // task7
+    @Autowired
+    private AccountRepository accountRepository;
+
     @RequestMapping("/clients")
     public List<ClientDTO> getClients() {
         return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
-
-//        hace lo mismo que arriba pero mejorado, más profesional
-//        return clientRepository.findAll().stream().map(ClientDTO::new).collect(toList());
     }
 
     // task6
@@ -52,8 +56,14 @@ public class ClientController {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
-        clientRepository.save(new Client(firstName, lastName, email, passwordEncoder.encode(password)));
+        //task7
+        Client newClient = new Client(firstName, lastName, email, passwordEncoder.encode(password));
+        Account newAccount = new Account("VIN-"+ ((int)(Math.random()*100000000)), LocalDate.now(), 0);
+        newClient.addAccount(newAccount);
+        clientRepository.save(newClient);
+        accountRepository.save(newAccount);
         return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     @RequestMapping("/clients/{id}")
@@ -65,9 +75,6 @@ public class ClientController {
     public ClientDTO getClientCurrent(Authentication authentication){
         Client currentClient = clientRepository.findByEmail(authentication.getName());
         return new ClientDTO(currentClient);
-
-        //En una sola linea:
-        //return new ClientDTO(clientRepository.findByEmail(authentication.getName()));
     }
 }
 
