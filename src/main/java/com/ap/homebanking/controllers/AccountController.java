@@ -1,7 +1,6 @@
 package com.ap.homebanking.controllers;
 
 import com.ap.homebanking.dtos.AccountDTO;
-import com.ap.homebanking.dtos.ClientDTO;
 import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
 import com.ap.homebanking.repositories.AccountRepository;
@@ -40,14 +39,6 @@ public class AccountController {
     }
 
     // task7
-//    @RequestMapping("/clients/current/accounts")
-//    public ClientDTO getClientCurrent(Authentication authentication){
-//        Client currentClient = clientRepository.findByEmail(authentication.getName());
-//        Account newAccount = new Account("VIN-", LocalDate.now(), 0);
-//        currentClient.addAccount(newAccount);
-//        accountRepository.save(newAccount);
-//        return new ClientDTO(currentClient);
-//    }
     @RequestMapping(value = "/clients/current/accounts", method = RequestMethod.POST)
     public ResponseEntity<Object> createAccount(Authentication authentication){
         Client currentClient = clientRepository.findByEmail(authentication.getName());
@@ -59,8 +50,5 @@ public class AccountController {
         } else {
             return new ResponseEntity<>("Account limit reached", HttpStatus.FORBIDDEN);
         }
-
-        //return new ClientDTO(currentClient);
-
     }
 }

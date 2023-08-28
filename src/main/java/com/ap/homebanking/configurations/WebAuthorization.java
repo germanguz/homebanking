@@ -20,24 +20,29 @@ public class WebAuthorization {
     @Bean
     protected SecurityFilterChain filterchain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                        //.antMatchers(HttpMethod.POST,"/**").permitAll();
+                    //.antMatchers(HttpMethod.POST,"/**").permitAll();  //solo para pruebas, habilita totalidad
                 // a lo que puede acceder cualquier usuario, para registrarse o iniciar sesión
                 .antMatchers("/web/index.html", "/web/js/index.js", "/web/css/style.css", "/web/img/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login", "/api/logout").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
-                // todo a lo que puede acceder solo admin
+
+                // a lo que puede acceder solo admin
                 .antMatchers("/h2-console/**").hasAuthority("ADMIN")
                 .antMatchers("/manager.html", "manager.js").hasAuthority("ADMIN")
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
                 .antMatchers("/api/accounts").hasAuthority("ADMIN")
+
                 // acceso tanto para admin como para cliente
                 .antMatchers("/api/clients/current", "/web/**").hasAnyAuthority("ADMIN", "CLIENT")
-
                 // task7
                 .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAnyAuthority("ADMIN", "CLIENT")
+                .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAnyAuthority("ADMIN", "CLIENT")
 
                 // solo para admin
-                .antMatchers("/api/clients/**").hasAuthority("ADMIN");
+                .antMatchers("/api/clients/**").hasAuthority("ADMIN")
+
+                //para bloquear en totalidad lo que no está especificado
+                .anyRequest().denyAll();
 
         http.formLogin()
                 .usernameParameter("email")
