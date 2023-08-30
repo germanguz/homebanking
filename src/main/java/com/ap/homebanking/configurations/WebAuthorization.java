@@ -30,11 +30,15 @@ public class WebAuthorization {
                 .antMatchers("/h2-console/**").hasAuthority("ADMIN")
                 .antMatchers("/manager.html", "manager.js").hasAuthority("ADMIN")
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
+
+                //lo correcto, creo, sería /api/accounts/** para ADMIN pero, el cliente no podría ver sus cuentas
                 .antMatchers("/api/accounts").hasAuthority("ADMIN")
 
                 // acceso tanto para admin como para cliente
-                .antMatchers("/api/clients/current", "/web/**", "/api/accounts/**").hasAnyAuthority("ADMIN", "CLIENT")
+                //si saco /api/accounts/** entonces cliente no podría ver sus cuentas porque se ven con id y no con current
+                .antMatchers("/api/clients/current/**", "/web/**", "/api/accounts/**").hasAnyAuthority("ADMIN", "CLIENT")
                 // task7
+                .antMatchers(HttpMethod.POST, "/api/transactions").hasAnyAuthority("ADMIN", "CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAnyAuthority("ADMIN", "CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAnyAuthority("ADMIN", "CLIENT")
 
@@ -43,6 +47,9 @@ public class WebAuthorization {
 
                 //para bloquear en totalidad lo que no está especificado
                 .anyRequest().denyAll();
+
+                //otra forma de bloqueo pero en este caso para quien no esté autenticado
+                //.anyRequest().authenticated();
 
         http.formLogin()
                 .usernameParameter("email")

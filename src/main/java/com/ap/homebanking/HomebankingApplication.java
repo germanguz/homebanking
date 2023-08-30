@@ -48,9 +48,9 @@ public class HomebankingApplication {
 			//task3
 			// creo 4 transacciones, 2 para cada cuenta del cliente1
 			Transaction transaction1 = new Transaction("deposit", 2000, LocalDateTime.now(), TransactionType.CREDIT);
-			Transaction transaction2 = new Transaction("pay", 500, LocalDateTime.now(), TransactionType.DEBIT);
+			Transaction transaction2 = new Transaction("pay", -500, LocalDateTime.now(), TransactionType.DEBIT);
 			Transaction transaction3 = new Transaction("donation", 3500, LocalDateTime.now(), TransactionType.CREDIT);
-			Transaction transaction4 = new Transaction("transfer", 1500, LocalDateTime.now().plusHours(1), TransactionType.DEBIT);
+			Transaction transaction4 = new Transaction("transfer", -1500, LocalDateTime.now().plusHours(1), TransactionType.DEBIT);
 
 			// asigno 2 transacciones a cada una de las 2 primeras cuentas, que son del cliente1
 			account1.addTransaction(transaction1);
@@ -60,9 +60,9 @@ public class HomebankingApplication {
 
 			// creo 4 transacciones, 2 para cada cuenta, pero ahora del cliente2
 			Transaction transaction5 = new Transaction("deposit cash", 20000, LocalDateTime.now(), TransactionType.CREDIT);
-			Transaction transaction6 = new Transaction("pay bill", 1800, LocalDateTime.now().plusDays(2), TransactionType.DEBIT);
+			Transaction transaction6 = new Transaction("pay bill", -1800, LocalDateTime.now().plusDays(2), TransactionType.DEBIT);
 			Transaction transaction7 = new Transaction("service", 4500, LocalDateTime.now(), TransactionType.CREDIT);
-			Transaction transaction8 = new Transaction("direct transfer", 2500, LocalDateTime.now().plusHours(2), TransactionType.DEBIT);
+			Transaction transaction8 = new Transaction("direct transfer", -2500, LocalDateTime.now().plusHours(2), TransactionType.DEBIT);
 
 			// asigno 2 transacciones a cada una de las 2 segundas cuentas, que son del cliente2
 			account3.addTransaction(transaction5);

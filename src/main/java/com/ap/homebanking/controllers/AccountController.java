@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -50,5 +50,12 @@ public class AccountController {
         } else {
             return new ResponseEntity<>("Account limit reached", HttpStatus.FORBIDDEN);
         }
+    }
+
+    // task8
+    @RequestMapping("/clients/current/accounts")
+    public List<AccountDTO> getAccountsCurrentClient(Authentication authentication) {
+        Client currentClient = clientRepository.findByEmail(authentication.getName());
+        return currentClient.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
     }
 }
