@@ -36,9 +36,9 @@ public class WebAuthorization {
 
                 // acceso tanto para admin como para cliente
                 //si saco /api/accounts/** entonces cliente no podría ver sus cuentas porque se ven con id y no con current
-                .antMatchers("/api/clients/current/**", "/web/**", "/api/accounts/**").hasAnyAuthority("ADMIN", "CLIENT")
+                .antMatchers("/api/clients/current/**", "/web/**", "/api/accounts/**", "/api/loans").hasAnyAuthority("ADMIN", "CLIENT")
                 // task7
-                .antMatchers(HttpMethod.POST, "/api/transactions").hasAnyAuthority("ADMIN", "CLIENT")
+                .antMatchers(HttpMethod.POST, "/api/transactions", "/api/loans").hasAnyAuthority("ADMIN", "CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/accounts").hasAnyAuthority("ADMIN", "CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAnyAuthority("ADMIN", "CLIENT")
 
