@@ -5,6 +5,7 @@ import com.ap.homebanking.dtos.LoanApplicationDTO;
 import com.ap.homebanking.dtos.LoanDTO;
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.*;
+import com.ap.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,28 +26,45 @@ import static java.util.stream.Collectors.toList;
 public class LoanController {
 
     @Autowired
-    private LoanRepository loanRepository;
+    private LoanService loanService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private ClientLoanRepository clientLoanRepository;
+    private ClientLoanService clientLoanService;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
+
+//    @Autowired
+//    private LoanRepository loanRepository;
+
+//    @Autowired
+//    private AccountRepository accountRepository;
+
+//    @Autowired
+//    private ClientRepository clientRepository;
+
+//    @Autowired
+//    private ClientLoanRepository clientLoanRepository;
+
+//    @Autowired
+//    private TransactionRepository transactionRepository;
 
     @Transactional
     @RequestMapping(path = "/loans", method = RequestMethod.POST)
     // Debe recibir un objeto de solicitud de crédito con los datos del préstamo
     public ResponseEntity<Object> createLoan(@RequestBody LoanApplicationDTO loanApplicationDTO, Authentication authentication) {
 
-        Loan currentLoan = loanRepository.findById(loanApplicationDTO.getLoanId()).orElse(null);
-        Account destinyAccount = accountRepository.findByNumber(loanApplicationDTO.getToAccountNumber());
-        Client currentClient = clientRepository.findByEmail(authentication.getName());
+        //Loan currentLoan = loanRepository.findById(loanApplicationDTO.getLoanId()).orElse(null);
+        Loan currentLoan = loanService.getLoanById(loanApplicationDTO.getLoanId());
+        //Account destinyAccount = accountRepository.findByNumber(loanApplicationDTO.getToAccountNumber());
+        Account destinyAccount = accountService.getAccountByNumber(loanApplicationDTO.getToAccountNumber());
+        Client currentClient = clientService.getClientByEmail(authentication.getName());
 
         // Que el monto no sea 0
         if (loanApplicationDTO.getAmount() <= 0) {
@@ -94,8 +112,10 @@ public class LoanController {
         // agrego el cliente al préstamo solicitado (client_id)
         currentClient.addClientLoan(clientLoan);
 
-        transactionRepository.save(transaction);
-        clientLoanRepository.save(clientLoan);
+        //transactionRepository.save(transaction);
+        transactionService.saveTransaction(transaction);
+        //clientLoanRepository.save(clientLoan);
+        clientLoanService.saveClientLoan(clientLoan);
 
         // para mostrar el JSON porque si usaba clientLoan me daba recursividad
         ClientLoanDTO clientLoanDTO = new ClientLoanDTO(clientLoan);
@@ -106,7 +126,8 @@ public class LoanController {
 
     @RequestMapping("/loans")
     public List<LoanDTO> getLoans() {
-        return loanRepository.findAll().stream().map(loan -> new LoanDTO(loan)).collect(toList());
+        //return loanRepository.findAll().stream().map(loan -> new LoanDTO(loan)).collect(toList());
+        return loanService.getLoans();
     }
 
 }

@@ -7,6 +7,7 @@ import com.ap.homebanking.models.TransactionType;
 import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.ClientRepository;
 import com.ap.homebanking.repositories.TransactionRepository;
+import com.ap.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,30 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class TransactionController {
 
-    @Autowired
-    private ClientRepository clientRepository;
+//    @Autowired
+//    private LoanService loanService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private ClientService clientService;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private AccountService accountService;
+
+//    @Autowired
+//    private ClientLoanService clientLoanService;
+
+    @Autowired
+    private TransactionService transactionService;
+
+
+//    @Autowired
+//    private ClientRepository clientRepository;
+
+//    @Autowired
+//    private AccountRepository accountRepository;
+
+//    @Autowired
+//    private TransactionRepository transactionRepository;
 
     @Transactional
     @RequestMapping(path = "/transactions", method = RequestMethod.POST)
@@ -41,9 +58,12 @@ public class TransactionController {
         //origin account = fromAccountNumber y destiny account = toAccountNumber
         //si los parametros no coinciden en el orden en que fueron enviados igual fciona. Por consistencia los pongo coincidiendo
 
-        Client currentClient = clientRepository.findByEmail(authentication.getName());
-        Account debitAccount = accountRepository.findByNumber(fromAccountNumber);
-        Account creditAccount = accountRepository.findByNumber(toAccountNumber);
+        //Client currentClient = clientRepository.findByEmail(authentication.getName());
+        Client currentClient = clientService.getClientByEmail(authentication.getName());
+        //Account debitAccount = accountRepository.findByNumber(fromAccountNumber);
+        Account debitAccount = accountService.getAccountByNumber(fromAccountNumber);
+        //Account creditAccount = accountRepository.findByNumber(toAccountNumber);
+        Account creditAccount = accountService.getAccountByNumber(toAccountNumber);
 
         if (fromAccountNumber.isBlank()) {
             return new ResponseEntity<>("Origin account is necessary", HttpStatus.FORBIDDEN);
@@ -80,8 +100,10 @@ public class TransactionController {
         debitAccount.addTransaction(transactionDebit);
         creditAccount.addTransaction(transactionCredit);
 
-        transactionRepository.save(transactionDebit);
-        transactionRepository.save(transactionCredit);
+        //transactionRepository.save(transactionDebit);
+        transactionService.saveTransaction(transactionDebit);
+        //transactionRepository.save(transactionCredit);
+        transactionService.saveTransaction(transactionCredit);
 
         return new ResponseEntity<>("Success transaction", HttpStatus.CREATED);
     }

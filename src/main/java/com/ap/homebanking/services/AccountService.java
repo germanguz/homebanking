@@ -12,4 +12,6 @@ public interface AccountService {
     AccountDTO getAccount(Long id);
 
     void saveAccount(Account account);
+
+    Account getAccountByNumber(String number);
 }
