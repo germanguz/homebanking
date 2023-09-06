@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface ClientService {
 
-    List<ClientDTO> getClients();
+    // getCLients fue dividido en dos: getAllClients y getClientsDTO a modo de prueba para separar tareas
+    List<Client> getAllClients();
 
-    //ClientDTO getClientDTOByEmail(String email);
+    List<ClientDTO> getClientsDTO(List<Client> clients);
+
     Client getClientByEmail(String email);
 
     void saveClient(Client client);

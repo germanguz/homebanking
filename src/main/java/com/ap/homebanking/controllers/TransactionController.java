@@ -24,30 +24,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class TransactionController {
 
-//    @Autowired
-//    private LoanService loanService;
-
     @Autowired
     private ClientService clientService;
 
     @Autowired
     private AccountService accountService;
 
-//    @Autowired
-//    private ClientLoanService clientLoanService;
-
     @Autowired
     private TransactionService transactionService;
 
-
-//    @Autowired
-//    private ClientRepository clientRepository;
-
-//    @Autowired
-//    private AccountRepository accountRepository;
-
-//    @Autowired
-//    private TransactionRepository transactionRepository;
 
     @Transactional
     @RequestMapping(path = "/transactions", method = RequestMethod.POST)
@@ -58,11 +43,8 @@ public class TransactionController {
         //origin account = fromAccountNumber y destiny account = toAccountNumber
         //si los parametros no coinciden en el orden en que fueron enviados igual fciona. Por consistencia los pongo coincidiendo
 
-        //Client currentClient = clientRepository.findByEmail(authentication.getName());
         Client currentClient = clientService.getClientByEmail(authentication.getName());
-        //Account debitAccount = accountRepository.findByNumber(fromAccountNumber);
         Account debitAccount = accountService.getAccountByNumber(fromAccountNumber);
-        //Account creditAccount = accountRepository.findByNumber(toAccountNumber);
         Account creditAccount = accountService.getAccountByNumber(toAccountNumber);
 
         if (fromAccountNumber.isBlank()) {
@@ -100,9 +82,7 @@ public class TransactionController {
         debitAccount.addTransaction(transactionDebit);
         creditAccount.addTransaction(transactionCredit);
 
-        //transactionRepository.save(transactionDebit);
         transactionService.saveTransaction(transactionDebit);
-        //transactionRepository.save(transactionCredit);
         transactionService.saveTransaction(transactionCredit);
 
         return new ResponseEntity<>("Success transaction", HttpStatus.CREATED);

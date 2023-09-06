@@ -17,9 +17,19 @@ public class ClientServiceImplement implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    //El sgte método fue dividido en los 2 métodos que siguen a continuación, linea 26 y 31
+//    @Override
+//    public List<ClientDTO> getClients() {
+//        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
+//    }
     @Override
-    public List<ClientDTO> getClients() {
-        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
+    public List<Client> getAllClients() {
+        return clientRepository.findAll();
+    }
+
+    @Override
+    public List<ClientDTO> getClientsDTO(List<Client> clients) {
+        return clients.stream().map(client -> new ClientDTO(client)).collect(toList());
     }
 
     @Override
@@ -36,5 +46,4 @@ public class ClientServiceImplement implements ClientService {
     public ClientDTO getClientDTOById(Long id) {
         return clientRepository.findById(id).map(clientDTO -> new ClientDTO(clientDTO)).orElse(null);
     }
-
 }

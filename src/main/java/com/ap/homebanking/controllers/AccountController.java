@@ -30,33 +30,23 @@ public class AccountController {
     @Autowired
     private ClientService clientService;
 
-//    @Autowired
-//    private AccountRepository accountRepository;
-    // task7
-//    @Autowired
-//    private ClientRepository clientRepository;
 
     @RequestMapping("/accounts")
     public List<AccountDTO> getAccounts() {
-        //return accountRepository.findAll().stream().map(account -> new AccountDTO(account)).collect(toList());
         return accountService.getAccounts();
     }
 
     @RequestMapping("accounts/{id}")
     public AccountDTO getAccount(@PathVariable Long id){
-        //return accountRepository.findById(id).map(accountDTO -> new AccountDTO(accountDTO)).orElse(null);
         return accountService.getAccount(id);
     }
 
-    // task7
     @RequestMapping(value = "/clients/current/accounts", method = RequestMethod.POST)
     public ResponseEntity<Object> createAccount(Authentication authentication){
-        //Client currentClient = clientRepository.findByEmail(authentication.getName());
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         if (currentClient.getAccounts().size() < 3) {
             Account newAccount = new Account("VIN-"+ ((int)(Math.random()*100000000)), LocalDate.now(), 0);
             currentClient.addAccount(newAccount);
-            //accountRepository.save(newAccount);
             accountService.saveAccount(newAccount);
             return new ResponseEntity<>("Account created", HttpStatus.CREATED);
         } else {
@@ -64,10 +54,8 @@ public class AccountController {
         }
     }
 
-    // task8
     @RequestMapping("/clients/current/accounts")
     public List<AccountDTO> getAccountsCurrentClient(Authentication authentication) {
-        //Client currentClient = clientRepository.findByEmail(authentication.getName());
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         return currentClient.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
     }

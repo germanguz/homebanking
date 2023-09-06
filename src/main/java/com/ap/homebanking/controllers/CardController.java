@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class CardController {
 
-//    @Autowired
-//    private ClientRepository clientRepository;
     @Autowired
     private ClientService clientService;
 
-//    @Autowired
-//    private CardRepository cardRepository;
     @Autowired
     private CardService cardService;
 
@@ -63,7 +59,6 @@ public class CardController {
             return new ResponseEntity<>("color type (gold, silver, titanium) is necessary", HttpStatus.FORBIDDEN);
         }
 
-        //Client currentClient = clientRepository.findByEmail(authentication.getName());
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         if (currentClient.getCards().stream().filter(typeCard -> typeCard.getType().equals(cardType)).collect(Collectors.toSet()).size() < 3) {
             Card newCard = new Card(currentClient.getFirstName()+" "+currentClient.getLastName(),
@@ -71,9 +66,7 @@ public class CardController {
                     LocalDate.now(), LocalDate.now().plusYears(5));
 
             currentClient.addCard(newCard);
-            //clientRepository.save(currentClient);
             clientService.saveClient(currentClient);
-            //cardRepository.save(newCard);
             cardService.saveCard(newCard);
             return new ResponseEntity<>("Card created", HttpStatus.CREATED);
         } else {

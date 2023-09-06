@@ -40,29 +40,13 @@ public class LoanController {
     @Autowired
     private TransactionService transactionService;
 
-//    @Autowired
-//    private LoanRepository loanRepository;
-
-//    @Autowired
-//    private AccountRepository accountRepository;
-
-//    @Autowired
-//    private ClientRepository clientRepository;
-
-//    @Autowired
-//    private ClientLoanRepository clientLoanRepository;
-
-//    @Autowired
-//    private TransactionRepository transactionRepository;
 
     @Transactional
     @RequestMapping(path = "/loans", method = RequestMethod.POST)
     // Debe recibir un objeto de solicitud de crédito con los datos del préstamo
     public ResponseEntity<Object> createLoan(@RequestBody LoanApplicationDTO loanApplicationDTO, Authentication authentication) {
 
-        //Loan currentLoan = loanRepository.findById(loanApplicationDTO.getLoanId()).orElse(null);
         Loan currentLoan = loanService.getLoanById(loanApplicationDTO.getLoanId());
-        //Account destinyAccount = accountRepository.findByNumber(loanApplicationDTO.getToAccountNumber());
         Account destinyAccount = accountService.getAccountByNumber(loanApplicationDTO.getToAccountNumber());
         Client currentClient = clientService.getClientByEmail(authentication.getName());
 
@@ -112,9 +96,7 @@ public class LoanController {
         // agrego el cliente al préstamo solicitado (client_id)
         currentClient.addClientLoan(clientLoan);
 
-        //transactionRepository.save(transaction);
         transactionService.saveTransaction(transaction);
-        //clientLoanRepository.save(clientLoan);
         clientLoanService.saveClientLoan(clientLoan);
 
         // para mostrar el JSON porque si usaba clientLoan me daba recursividad
@@ -126,8 +108,6 @@ public class LoanController {
 
     @RequestMapping("/loans")
     public List<LoanDTO> getLoans() {
-        //return loanRepository.findAll().stream().map(loan -> new LoanDTO(loan)).collect(toList());
         return loanService.getLoans();
     }
-
 }
