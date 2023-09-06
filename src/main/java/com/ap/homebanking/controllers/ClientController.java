@@ -5,6 +5,7 @@ import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
 import com.ap.homebanking.repositories.AccountRepository;
 import com.ap.homebanking.repositories.ClientRepository;
+import com.ap.homebanking.services.AccountService;
 import com.ap.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private AccountService accountService;
+
 //    @Autowired
 //    private ClientRepository clientRepository;
 
@@ -32,8 +36,8 @@ public class ClientController {
     private PasswordEncoder passwordEncoder;
 
     // task7
-    @Autowired
-    private AccountRepository accountRepository;
+//    @Autowired
+//    private AccountRepository accountRepository;
 
     @RequestMapping("/clients")
     public List<ClientDTO> getClients() {
@@ -68,7 +72,8 @@ public class ClientController {
         newClient.addAccount(newAccount);
         //clientRepository.save(newClient);
         clientService.saveClient(newClient);
-        accountRepository.save(newAccount);
+        //accountRepository.save(newAccount);
+        accountService.saveAccount(newAccount);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
