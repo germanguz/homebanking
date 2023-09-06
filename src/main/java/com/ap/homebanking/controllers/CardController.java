@@ -3,6 +3,8 @@ package com.ap.homebanking.controllers;
 import com.ap.homebanking.models.*;
 import com.ap.homebanking.repositories.CardRepository;
 import com.ap.homebanking.repositories.ClientRepository;
+import com.ap.homebanking.services.CardService;
+import com.ap.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,10 @@ import java.util.stream.Collectors;
 public class CardController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
 
     // Funciones para crear los números random de la tarjeta y cvv
     public String randomNumberCard() {
@@ -57,15 +59,15 @@ public class CardController {
             return new ResponseEntity<>("color type (gold, silver, titanium) is necessary", HttpStatus.FORBIDDEN);
         }
 
-        Client currentClient = clientRepository.findByEmail(authentication.getName());
+        Client currentClient = clientService.getClientByEmail(authentication.getName());
         if (currentClient.getCards().stream().filter(typeCard -> typeCard.getType().equals(cardType)).collect(Collectors.toSet()).size() < 3) {
             Card newCard = new Card(currentClient.getFirstName()+" "+currentClient.getLastName(),
                     cardType, cardColor, randomNumberCard(), randomNumberCvv(),
                     LocalDate.now(), LocalDate.now().plusYears(5));
 
             currentClient.addCard(newCard);
-            clientRepository.save(currentClient);
-            cardRepository.save(newCard);
+            clientService.saveClient(currentClient);
+            cardService.saveCard(newCard);
             return new ResponseEntity<>("Card created", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Card limit reached", HttpStatus.FORBIDDEN);
