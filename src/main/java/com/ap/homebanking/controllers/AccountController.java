@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,17 +29,17 @@ public class AccountController {
     private ClientService clientService;
 
 
-    @RequestMapping("/accounts")
+    @GetMapping("/accounts")
     public List<AccountDTO> getAccounts() {
         return accountService.getAccounts();
     }
 
-    @RequestMapping("accounts/{id}")
+    @GetMapping("accounts/{id}")
     public AccountDTO getAccount(@PathVariable Long id){
         return accountService.getAccount(id);
     }
 
-    @RequestMapping(value = "/clients/current/accounts", method = RequestMethod.POST)
+    @PostMapping("/clients/current/accounts")
     public ResponseEntity<Object> createAccount(Authentication authentication){
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         if (currentClient.getAccounts().size() < 3) {
@@ -54,7 +52,7 @@ public class AccountController {
         }
     }
 
-    @RequestMapping("/clients/current/accounts")
+    @GetMapping("/clients/current/accounts")
     public List<AccountDTO> getAccountsCurrentClient(Authentication authentication) {
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         return currentClient.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
