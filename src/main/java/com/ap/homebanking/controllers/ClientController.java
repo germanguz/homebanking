@@ -32,13 +32,13 @@ public class ClientController {
     private PasswordEncoder passwordEncoder;
 
 
-    @RequestMapping("/clients")
+    @GetMapping("/clients")
     public List<ClientDTO> getClients() {
         // acá uso los 2 métodos que separé en clientService y clientServiceImplement
         return clientService.getClientsDTO(clientService.getAllClients());
     }
 
-    @RequestMapping(path = "/clients", method = RequestMethod.POST)
+    @PostMapping("/clients")
     public ResponseEntity<Object> register(@RequestParam String firstName,
                                            @RequestParam String lastName,
                                            @RequestParam String email,
@@ -66,12 +66,12 @@ public class ClientController {
 
     }
 
-    @RequestMapping("/clients/{id}")
+    @GetMapping("/clients/{id}")
     public ClientDTO getClient(@PathVariable Long id){
         return clientService.getClientDTOById(id);
     }
 
-    @RequestMapping("/clients/current")
+    @GetMapping("/clients/current")
     public ClientDTO getClientCurrent(Authentication authentication){
         Client currentClient = clientService.getClientByEmail(authentication.getName());
         return new ClientDTO(currentClient);
