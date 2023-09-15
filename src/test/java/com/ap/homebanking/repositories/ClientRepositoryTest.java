@@ -9,11 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-//import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.hamcrest.Matchers.*;
 
 @DataJpaTest
@@ -23,14 +18,27 @@ class ClientRepositoryTest {
     @Autowired
     private ClientRepository clientRepository;
 
+    // verifica que exista un cliente con el email proporcionado
     @Test
     public void findByEmail() {
         Client client = clientRepository.findByEmail("admin@mindhub.com");
         assertThat(client, notNullValue());
-//        List<Client> clients = clientRepository.findAll();
-//        for (Client client : clients) {
-//            assertThat(client.getEmail(), notNullValue());
-//        }
+    }
+
+    // verifica que existan clientes
+    @Test
+    public void notEmptyList() {
+        List<Client> clients = clientRepository.findAll();
+        assertThat(clients, is(not(empty())));
+    }
+
+    // verifica que en los clientes exista un email
+    @Test
+    public void mailNotNull() {
+        List<Client> clients = clientRepository.findAll();
+        for (Client client : clients) {
+            assertThat(client.getEmail(), notNullValue());
+        }
     }
 
 }
